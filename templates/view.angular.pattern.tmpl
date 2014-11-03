@@ -1,0 +1,26 @@
+%TMPL:INCLUDE{"view"}%
+
+%TMPL:DEF{"sidebar"}%<div id="patternSideBar"><div id="patternClearHeaderLeft"></div>
+<div id="patternSideBarContents" class="foswikiContents" name="websidebar" reload="web">
+</div></div>%TMPL:END%
+
+%TMPL:DEF{"main"}%<div class="foswikiPage">
+  <div id="patternScreen">
+    <div id="patternPageShadow">%TMPL:P{"metanavigation"}%
+      <div id="patternPage">%TMPL:P{"startsidebarwrapper"}%
+        <div id="patternOuter">
+          <div id="patternFloatWrap">
+            <div id="patternMain">%TMPL:P{"topbarspacer"}%%TMPL:P{"horizontalnavigation"}%
+              <div id="patternMainContents" class="foswikiContents" name="patterntopiccontents"></div>
+            </div>%TMPL:P{"sidebar"}%
+          </div>
+          <div class="clear">&nbsp;</div>
+        </div>%TMPL:P{"endsidebarwrapper"}%%TMPL:P{"topbar"}%%TMPL:P{"bottombar"}%
+      </div>
+    </div>
+  </div>
+</div>%TMPL:P{"javascript::angular"}%%TMPL:P{"css::angular"}%%TMPL:END%
+
+%TMPL:DEF{"content"}%
+%TMPL:PREV%
+%TMPL:END%

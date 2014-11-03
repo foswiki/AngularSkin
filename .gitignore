@@ -1,0 +1,8 @@
+*.gz
+*.swp
+pub/System/AngularSkin/app.js
+pub/System/AngularSkin/directives.js
+pub/System/AngularSkin/pkg.css
+pub/System/AngularSkin/pkg.js
+pub/System/AngularSkin/services.js
+pub/System/AngularSkin/settings.js

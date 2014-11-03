@@ -1,0 +1,27 @@
+%TMPL:INCLUDE{"view"}%
+
+%TMPL:DEF{"defaultbody"}%<!-- -->
+  <div class="natTopPanel foswikiContents" name="toppanel::contents" reload="web" style="display:none"></div>
+  <div class="natTopShadow"></div>
+  <div class="natBodyContents">
+    %TMPL:P{"langswitcher"}%<!-- -->
+    <a class="natNavToggle fa fa-bars"></a>
+    <div class="natTopBar clearfix foswikiContents" name="topbar::contents" reload="web"></div>
+    <div class="natWebMenu clearfix foswikiContents" name="webmenu::contents" reload="web"></div>
+    <div class="natMiddle">
+      <div class="natMiddleContents clearfix">
+        <div class="natSideBar">
+          <div class="natSideBarContents foswikiContents" name="sidebar" reload="web"></div>
+        </div>
+        <div class="natMain animated">
+          <div class="natMainHeaderContents clearfix foswikiContents" name="contentheader::contents"></div>
+          <div class="natMainContents foswikiContents" name="content"></div>
+          <div class="natMainFooterContents foswikiContents" name="contentfooter::contents"></div>
+        </div>
+      </div>
+    </div>
+    <div class="natBottomBar">
+      <div class="natBottomBarContents foswikiContents" name="bottombar::contents" reload="web"></div>
+    </div>
+  </div>
+<!-- -->%TMPL:END%

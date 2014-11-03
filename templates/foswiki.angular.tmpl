@@ -1,0 +1,44 @@
+%TMPL:INCLUDE{"foswiki"}%
+
+%TMPL:DEF{"ngapp"}%ng-app="foswikiApp"%TMPL:END%
+%TMPL:DEF{"ngcontroller"}%ng-controller="ViewCtrl"%TMPL:END%
+
+%TMPL:DEF{"javascript::angular"}%%TMPL:P{"javascript::angular::prefs"}%%TMPL:P{"javascript::angular::dev"}%%TMPL:END%
+
+%TMPL:DEF{"javascript::angular::prefs"}%%ADDTOZONE{"script" 
+  requires="JQUERYPLUGIN::FOSWIKI::PREFERENCES"
+  id="ANGULARSKIN::PREFERENCES"
+  text="<script type='text/javascript'>
+jQuery.extend(foswiki.preferences, {
+  'SCRIPTURL_VIEW':'%SCRIPTURL{"angular"}%/view',
+  'SCRIPTURLPATH_VIEW':'%SCRIPTURLPATH{"angular"}%/view',
+  'SCRIPTURL_ORIGVIEW':'%SCRIPTURL{"view"}%',
+  'SCRIPTURLPATH_ORIGVIEW':'%SCRIPTURLPATH{"view"}%'
+});
+</script>"
+}%%JQREQUIRE{"ngCore, loadingBar"}%%TMPL:END%
+
+%TMPL:DEF{"javascript::angular::prod"}%%ADDTOZONE{
+    "script"
+    id="ANGULARSKIN"
+    requires="ANGULARPLUGIN::NGCORE"
+    text="<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/pkg.js'></script>"
+}%%TMPL:END%
+
+%TMPL:DEF{"javascript::angular::dev"}%%ADDTOZONE{
+    "script"
+    id="ANGULARSKIN"
+    requires="ANGULARPLUGIN::NGCORE, ANGULARPLUGIN::NGROUTE"
+    text="<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/app.uncompressed.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/settings.uncompressed.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/controller.uncompressed.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/directives.uncompressed.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/services.uncompressed.js'></script>"
+}%%TMPL:END%
+
+%TMPL:DEF{"css::angular"}%%ADDTOZONE{
+  "head"
+  id="ANGULARPLUGIN::CSS"
+  text="<link rel='stylesheet' type='text/css' href='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/pkg.css' media='all' >"
+}%%TMPL:END%
+
