@@ -387,12 +387,13 @@ app.directive('foswikiContents', [
 
     var viewScriptUrl = foswiki.getScriptUrl("origview"),
         angularScriptUrl = foswiki.getScriptUrl("view"),
-        urlFilter = new RegExp("^"+viewScriptUrl+"/[A-Z]"),
+        urlFilter = new RegExp("^"+viewScriptUrl+"(?=/[A-Z])"),
         anchorFilter = new RegExp("^"+angularScriptUrl+"/[A-Z].*#");
 
     // rewrite local links
     function _rewriteUrls(content) {
 
+      // view urls
       content.find("a").filter(function() { return urlFilter.test(this.href); }).each(function() {
 
         var $this = angular.element(this),
@@ -419,12 +420,15 @@ app.directive('foswikiContents', [
         }
       });
 
+      // view forms
+if (0) {
+      // anchor urls
       content.find("a").filter(function() { return anchorFilter.test(this.href); }).each(function() {
         var $this = angular.element(this),
             hash = this.href.replace(/^.*#/, "");
 
         $this.on("click", function(ev) {
-          //$log.debug("clicked hash link", hash);
+          $log.debug("clicked hash link", hash);
           $timeout(function() {
             $location.hash(hash);
             $anchorScroll();
@@ -432,6 +436,7 @@ app.directive('foswikiContents', [
           ev.preventDefault();
         });
       });
+}
 
 
     }

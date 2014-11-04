@@ -1,0 +1,36 @@
+%TMPL:INCLUDE{"view"}%
+
+%TMPL:DEF{"sidebar"}%<div id="patternSideBar"><div id="patternClearHeaderLeft"></div>
+<div id="patternSideBarContents" class="foswikiContents" name="websidebar" reload="web">
+</div></div>%TMPL:END%
+
+%TMPL:DEF{"main"}%<div class="foswikiPage">
+  <div id="patternScreen">
+    <div id="patternPageShadow">%TMPL:P{"metanavigation"}%
+      <div id="patternPage">%TMPL:P{"startsidebarwrapper"}%
+        <div id="patternOuter">
+          <div id="patternFloatWrap">
+            <div id="patternMain">%TMPL:P{"topbarspacer"}%%TMPL:P{"horizontalnavigation"}%
+              <div id="patternMainContents" class="foswikiContents" name="patterntopiccontents"></div>
+            </div>%TMPL:P{"sidebar"}%
+          </div>
+          <div class="clear">&nbsp;</div>
+        </div>%TMPL:P{"endsidebarwrapper"}%%TMPL:P{"topbar"}%%TMPL:P{"bottombar"}%
+      </div>
+    </div>
+  </div>
+</div>%TMPL:P{"javascript::angular"}%%TMPL:P{"css::angular"}%%TMPL:END%
+
+%TMPL:DEF{"head:meta"}%<meta http-equiv="Content-Type" content="text/html; charset=%CHARSET%" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5, user-scalable=yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="icon" href="%FAVICON%" type="image/x-icon" />
+<link rel="shortcut icon" href="%FAVICON%" type="image/x-icon" />
+<link rel="alternate" href="%SCRIPTURL{edit}%/%BASEWEB%/%BASETOPIC%?t=%GMTIME{"$epoch"}%" type="application/x-wiki" title="edit %BASETOPIC%" />
+<meta name="TEXT_NUM_TOPICS" content="%MAKETEXT{"Number of topics:"}%" />
+<meta name="TEXT_MODIFY_SEARCH" content="%MAKETEXT{"Modify search"}%" />
+<meta name="robots" content="noindex" />%HTTP_EQUIV_ON_VIEW%
+<base href="%SCRIPTURL{"angular"}%/" /><!--[if IE]></base><![endif]-->%TMPL:END%
