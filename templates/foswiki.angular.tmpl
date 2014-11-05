@@ -10,8 +10,11 @@
   id="ANGULARSKIN::PREFERENCES"
   text="<script type='text/javascript'>
 jQuery.extend(foswiki.preferences, {
-  'SCRIPTURL_VIEW':'%SCRIPTURL{"angular"}%/view',
-  'SCRIPTURLPATH_VIEW':'%SCRIPTURLPATH{"angular"}%/view',
+  'ANGULAR_EXCLUDE':'%QUERY{"{AngularPlugin}{Exclude}"}%',
+  'SCRIPTURL_ANGULAR':'%SCRIPTURL{"angular"}%',
+  'SCRIPTURLPATH_ANGULAR':'%SCRIPTURLPATH{"angular"}%',
+  'SCRIPTURL_VIEW':'%SCRIPTURL{"angular"}%',
+  'SCRIPTURLPATH_VIEW':'%SCRIPTURLPATH{"angular"}%',
   'SCRIPTURL_ORIGVIEW':'%SCRIPTURL{"view"}%',
   'SCRIPTURLPATH_ORIGVIEW':'%SCRIPTURLPATH{"view"}%'
 });

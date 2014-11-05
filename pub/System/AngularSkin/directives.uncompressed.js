@@ -26,15 +26,19 @@ app.directive('foswikiContents', [
   ) {
 
     var viewScriptUrl = foswiki.getScriptUrl("origview"),
-        angularScriptUrl = foswiki.getScriptUrl("view"),
+        angularScriptUrl = foswiki.getScriptUrl("angular"),
         urlFilter = new RegExp("^"+viewScriptUrl+"(?=/[A-Z])"),
-        anchorFilter = new RegExp("^"+angularScriptUrl+"/[A-Z].*#");
+        anchorFilter = new RegExp("^"+angularScriptUrl+"/[A-Z].*#"),
+        excludeFilter = new RegExp(foswiki.getPreference("ANGULAR_EXCLUDE"));
 
     // rewrite local links
     function _rewriteUrls(content) {
 
       // view urls
-      content.find("a").filter(function() { return urlFilter.test(this.href); }).each(function() {
+      content.find("a").filter(function() { 
+        var href = this.href;
+        return urlFilter.test(href) && !excludeFilter.test(href); 
+      }).each(function() {
 
         var $this = angular.element(this),
             search = this.search,
@@ -55,7 +59,7 @@ app.directive('foswikiContents', [
         if (ignore) {
           //$log.debug("ignoring ",href);
         } else {
-          //$log.debug("rewriting url ",this.href,"to", href);
+          $log.debug("rewriting url ",this.href,"to", href);
           $this.attr("href", href);
         }
       });
@@ -156,7 +160,7 @@ if (0) {
               }
 
               if (content) {
-                _rewriteUrls(content);
+                //_rewriteUrls(content);
                 content.find(".foswikiCurrentTopicLink").on("click", function() {
                   $rootScope.forceReload = (new Date()).getTime();
                   $rootScope.$apply();
