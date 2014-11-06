@@ -384,10 +384,9 @@ app.directive('foswikiContents', [
     $anchorScroll,
     foswikiService
   ) {
-
     var viewScriptUrl = foswiki.getScriptUrl("origview"),
         angularScriptUrl = foswiki.getScriptUrl("angular"),
-        urlFilter = new RegExp("^"+viewScriptUrl+"(?=/[A-Z])"),
+        urlFilter = new RegExp("^"+viewScriptUrl+"/([A-Z_]\\w+(?:/[A-Z_]\\w+)*)/([^\/#]+)"),
         anchorFilter = new RegExp("^"+angularScriptUrl+"/[A-Z].*#"),
         excludeFilter = new RegExp(foswiki.getPreference("ANGULAR_EXCLUDE"));
 
@@ -396,32 +395,42 @@ app.directive('foswikiContents', [
 
       // view urls
       content.find("a").filter(function() { 
-        var href = this.href;
-        return urlFilter.test(href) && !excludeFilter.test(href); 
-      }).each(function() {
-
-        var $this = angular.element(this),
+        var href = this.href, 
             search = this.search,
-            href = this.href.replace(viewScriptUrl, angularScriptUrl),
-            ignore = false;
+            web, topic,
+            match = true;
 
-        if (search) {
-          search.replace(/^\?/, '').split('&').map(function(val) {
-            var param = val.split('=');
+        // find view urls
+        if (!urlFilter.test(href)) {
+          match = false;
+        } else {
+
+          // test excludeFilter
+          web = RegExp.$1;
+          topic = RegExp.$2;
+
+          if (excludeFilter.test(web+"."+topic)) {
+            match = false;
+          } else {
 
             // ignore links to that have a contenttype param. these are pdf links
-            if (param[0] === "contenttype") {
-              ignore = true;
-            }    
-          });
+            if (search) {
+              search.replace(/^\?/, '').split('&').map(function(val) {
+                var param = val.split('=');
+                if (param[0] === "contenttype") {
+                  match = false;
+                }    
+              });
+            }
+          }
         }
 
-        if (ignore) {
-          //$log.debug("ignoring ",href);
-        } else {
-          $log.debug("rewriting url ",this.href,"to", href);
-          $this.attr("href", href);
-        }
+        return match;
+      }).each(function() {
+
+        var href = this.href.replace(viewScriptUrl, angularScriptUrl);
+        //$log.debug("rewriting url ",this.href,"to", href);
+        this.href = href;
       });
 
       // view forms
@@ -520,7 +529,7 @@ if (0) {
               }
 
               if (content) {
-                //_rewriteUrls(content);
+                _rewriteUrls(content);
                 content.find(".foswikiCurrentTopicLink").on("click", function() {
                   $rootScope.forceReload = (new Date()).getTime();
                   $rootScope.$apply();
