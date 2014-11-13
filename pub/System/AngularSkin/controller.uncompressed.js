@@ -61,10 +61,10 @@ app.controller("ViewCtrl", [
 
       if (typeof(angularMode) !== 'undefined' && angularMode === "0") {
         // reload page 
-        var url = foswiki.getPreference("SCRIPTURL") + "/view/" + web + "/" + topic + "?angular=0";
+        var url = foswiki.getScriptUrl("view", web, topic, { angular: 0});
         $log.debug("redirecting to ",url);
         window.location.href = url;
-        return;
+        return false;
       }
 
       if (web !== prevWeb || topic !== prevTopic) {

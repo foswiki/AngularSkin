@@ -3,6 +3,9 @@
 %TMPL:DEF{"ngapp"}%ng-app="foswikiApp"%TMPL:END%
 %TMPL:DEF{"ngcontroller"}%ng-controller="ViewCtrl"%TMPL:END%
 
+%TMPL:DEF{"pageineffect"}%pulse,bounceIn,bounceInLeft,bounceInRight,bounceInUp,fadeIn,fadeInUp,fadeInLeft,fadeInRight,lightSpeedIn,zoomIn,zoomInLeft,zoomInRight,zoomInUp%TMPL:END%
+%TMPL:DEF{"pageouteffect"}%bounceOut,bounceOutDown,bounceOutLeft,bounceOutRight,fadeOut,fadeOutDown,fadeOutLeft,fadeOutRight,hinge,hinge,zoomOut,zoomOutLeft,zoomOutRight,zoomOutDown%TMPL:END%
+
 %TMPL:DEF{"javascript::angular"}%%TMPL:P{"javascript::angular::prefs"}%%TMPL:P{"javascript::angular::dev"}%%TMPL:END%
 
 %TMPL:DEF{"javascript::angular::prefs"}%%ADDTOZONE{"script" 
@@ -10,13 +13,7 @@
   id="ANGULARSKIN::PREFERENCES"
   text="<script type='text/javascript'>
 jQuery.extend(foswiki.preferences, {
-  'ANGULAR_EXCLUDE':'%QUERY{"{AngularPlugin}{Exclude}"}%',
-  'SCRIPTURL_ANGULAR':'%SCRIPTURL{"angular"}%',
-  'SCRIPTURLPATH_ANGULAR':'%SCRIPTURLPATH{"angular"}%',
-  'SCRIPTURL_VIEW':'%SCRIPTURL{"angular"}%',
-  'SCRIPTURLPATH_VIEW':'%SCRIPTURLPATH{"angular"}%',
-  'SCRIPTURL_ORIGVIEW':'%SCRIPTURL{"view"}%',
-  'SCRIPTURLPATH_ORIGVIEW':'%SCRIPTURLPATH{"view"}%'
+  'ANGULAR_EXCLUDE':'%QUERY{"{AngularPlugin}{Exclude}"}%'
 });
 </script>"
 }%%JQREQUIRE{"ngCore, loadingBar"}%%TMPL:END%

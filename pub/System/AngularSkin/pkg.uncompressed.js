@@ -264,10 +264,10 @@ app.controller("ViewCtrl", [
 
       if (typeof(angularMode) !== 'undefined' && angularMode === "0") {
         // reload page 
-        var url = foswiki.getPreference("SCRIPTURL") + "/view/" + web + "/" + topic + "?angular=0";
+        var url = foswiki.getScriptUrl("view", web, topic, { angular: 0});
         $log.debug("redirecting to ",url);
         window.location.href = url;
-        return;
+        return false;
       }
 
       if (web !== prevWeb || topic !== prevTopic) {
@@ -384,15 +384,15 @@ app.directive('foswikiContents', [
     $anchorScroll,
     foswikiService
   ) {
-    var viewScriptUrl = foswiki.getScriptUrl("origview"),
-        angularScriptUrl = foswiki.getScriptUrl("angular"),
+    var viewScriptUrl = foswiki.getScriptUrl("view"),
         urlFilter = new RegExp("^"+viewScriptUrl+"/([A-Z_]\\w+(?:/[A-Z_]\\w+)*)/([^\/#]+)"),
-        anchorFilter = new RegExp("^"+angularScriptUrl+"/[A-Z].*#"),
+        anchorFilter = new RegExp("^"+viewScriptUrl+"/[A-Z].*#"),
         excludeFilter = new RegExp(foswiki.getPreference("ANGULAR_EXCLUDE"));
 
     // rewrite local links
     function _rewriteUrls(content) {
 
+if (0) {
       // view urls
       content.find("a").filter(function() { 
         var href = this.href, 
@@ -432,23 +432,6 @@ app.directive('foswikiContents', [
         //$log.debug("rewriting url ",this.href,"to", href);
         this.href = href;
       });
-
-      // view forms
-if (0) {
-      // anchor urls
-      content.find("a").filter(function() { return anchorFilter.test(this.href); }).each(function() {
-        var $this = angular.element(this),
-            hash = this.href.replace(/^.*#/, "");
-
-        $this.on("click", function(ev) {
-          $log.debug("clicked hash link", hash);
-          $timeout(function() {
-            $location.hash(hash);
-            $anchorScroll();
-          });
-          ev.preventDefault();
-        });
-      });
 }
 
 
@@ -459,104 +442,138 @@ if (0) {
       scope: true,
       restrict: 'C',
       link: function(scope, elem, attrs) {
-        var pageIn, pageOut;
+        var pageIn, pageOut, isFirst = true;
 
         //$log.debug("constructing elem with attrs=",attrs);
 
         // create an amination effect; returns a promise that resolves when animation finished
-        function _animate(effect) {
-          var deferred = $q.defer();
+        function _animate(effects) {
+          var deferred, effect;
+
+          if (!effects) {
+            return;
+          }
+
+          deferred = $q.defer();
+
+          if (typeof(effects) === 'string') {
+            effects = effects.split(/\s*,\s*/);
+            effect = effects[Math.floor(Math.random()*effects.length)];
+          }
 
           elem.one("animationend webkitAnimationEnd MSAnimationEnd oAnimationEnd", function(ev) {
             //$log.debug("animation "+effect+" ended for "+attrs.name);
             deferred.resolve();
           });
 
-          //$log.debug("animation "+effect+" started for",attrs.name);
+          $log.log(effect+" animation for",attrs.name);
 
-          if (typeof(attrs.pageInEffect) !== 'undefined') {
-            elem.removeClass(attrs.pageInEffect);
-          }
-
-          if (typeof(attrs.pageOutEffect) !== 'undefined') {
-            elem.removeClass(attrs.pageOutEffect);
-          }
-
+          _clearAnimation();
+          elem.data("prevEffect", effect);
           elem.addClass(effect);
 
           return deferred.promise;
+        }
+        function _clearAnimation() {
+          var effect = elem.data("prevEffect");
+          if (effect) {
+            elem.removeClass(effect);
+            elem.data("prevEffect", undefined);
+          }
         }
 
 
         // contact foswikiService and request a template
         function _requestTemplate() {
+          var type = attrs.type || 'html';
 
-          // broadcast event
-          scope.$broadcast("foswiki.requestTemplate");
-          //$log.log("requestingTemplate "+attrs.name);
+          if (isFirst && type === 'html' || type === 'angular') {
+            _processContent(elem);
+          } 
 
-          // animate page out
-          if (typeof(pageIn) !== 'undefined' && typeof(attrs.pageOutEffect) !== 'undefined') {
-            pageOut = _animate(attrs.pageOutEffect);
-          }
+          if (isFirst) {
+            isFirst = false;
+          } else {
 
-          foswikiService.requestTemplate(attrs.name, attrs.reload).then(function(data) {
+            // broadcast event
+            scope.$broadcast("foswiki.requestTemplate");
+            //$log.log("requestingTemplate "+attrs.name);
 
-            function _doIt() {
-              $log.debug("inserting template ",attrs.name);
-
-              var type = attrs.type || 'html',
-                  content;
-            
-              switch (type) {
-                case 'html':
-                  content = angular.element(data);
-                  elem.html(content);      
-                  break;
-                case 'angular':
-                  content = $compile(data)(scope);
-                  elem.html(content);      
-                  break;
-                case 'text':
-                  elem.text(data);      
-                  break;
-                case 'plain':
-                  elem.html(data);      
-                  break;
-                default:
-                  throw "unknown content type '"+type+"'";
-                  break;
-              }
-
-              if (content) {
-                _rewriteUrls(content);
-                content.find(".foswikiCurrentTopicLink").on("click", function() {
-                  $rootScope.forceReload = (new Date()).getTime();
-                  $rootScope.$apply();
-                });
-              }
-
-              // broadcast event
-              scope.$broadcast("foswiki.insertTemplate");
-
-              // page in
-              if (typeof(attrs.pageInEffect) !== 'undefined') {
-                pageIn = _animate(attrs.pageInEffect);
-              }
+            // animate page out only if there is a page in effect as well
+            if (pageIn) {
+              pageOut = _animate(attrs.pageOutEffect);
             }
 
-            if (typeof(data) !== 'undefined') {
-              if (attrs.delay) {
-                $timeout(_doIt, attrs.delay);
-              } else {
-                if (pageOut) {
-                  pageOut.then(_doIt);
+            // use service api
+            foswikiService.requestTemplate(attrs.name, attrs.reload).then(function(data) {
+
+              if (typeof(data) !== 'undefined') {
+                if (attrs.delay) {
+                  $timeout(function() {
+                    _processContent(_insertTemplate(data));
+                  }, attrs.delay);
                 } else {
-                  _doIt();
+                  if (pageOut) {
+                    pageOut.then(function() {
+                      _processContent(_insertTemplate(data));
+                    });
+                  } else {
+                    _processContent(_insertTemplate(data));
+                    if (pageIn) {
+                      pageIn.then(function() {
+                        _clearAnimation();
+                      });
+                    }
+                  }
                 }
               }
-            }
-          });
+            });
+          }
+        }
+
+        function _insertTemplate(data) {
+          $log.debug("inserting template ",attrs.name);
+
+          var type = attrs.type || 'html',
+              content;
+        
+          switch (type) {
+            case 'html':
+              content = angular.element(data);
+              elem.html(content);      
+              break;
+            case 'angular':
+              content = $compile(data)(scope);
+              elem.html(content);      
+              break;
+            case 'text':
+              elem.text(data);      
+              break;
+            case 'plain':
+              elem.html(data);      
+              break;
+            default:
+              throw "unknown content type '"+type+"'";
+              break;
+          }
+
+          // broadcast event
+          scope.$broadcast("foswiki.insertTemplate");
+
+          // animate page in
+          pageIn = _animate(attrs.pageInEffect);
+
+          return content;
+        }
+
+        function _processContent(content) {
+          if (content) {
+            //_rewriteUrls(content);
+            content.find(".foswikiCurrentTopicLink").on("click", function() {
+              $rootScope.forceReload = (new Date()).getTime();
+              $rootScope.$apply();
+            });
+          }
         }
 
         if (attrs.reload === 'web') {
