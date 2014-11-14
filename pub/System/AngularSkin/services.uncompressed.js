@@ -11,7 +11,6 @@ app.factory("foswikiService", [
   '$rootScope',
   '$q', 
   '$location', 
-  'foswikiAppSettings', 
 
   function(
     $http, 
@@ -19,8 +18,7 @@ app.factory("foswikiService", [
     $log,
     $rootScope,
     $q, 
-    $location, 
-    foswikiAppSettings
+    $location
   ) {
 
     var cache = {}, 

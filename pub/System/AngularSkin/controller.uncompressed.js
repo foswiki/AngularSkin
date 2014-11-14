@@ -27,7 +27,9 @@ app.controller("ViewCtrl", [
     var pathRegex = new RegExp("^\/(?:(view|login)\/)?((?:[^\/]+\/)+)([^\/]+)\/?$"),
         prevWeb = '',
         prevTopic = '',
-        prevUrl = '';
+        prevUrl = '',
+        isFirst = true, // true to prevent a service call on initial load
+        blockLocationChange = false; // flag to mitigate cascading locationChangeStart events
 
     function _parseLocation() {
 
@@ -57,11 +59,11 @@ app.controller("ViewCtrl", [
       foswiki.preferences.WEB = web;
       foswiki.preferences.TOPIC = topic;
 
-      $log.debug("parse path=",path,"script=",$scope.script,"web=",web,"topic=",topic);
+      //$log.debug("parse path=",path,"script=",$scope.script,"web=",web,"topic=",topic);
 
       if (typeof(angularMode) !== 'undefined' && angularMode === "0") {
         // reload page 
-        var url = foswiki.getScriptUrl("view", web, topic, { angular: 0});
+        url = foswiki.getScriptUrl("view", web, topic, { angular: 0});
         $log.debug("redirecting to ",url);
         window.location.href = url;
         return false;
@@ -71,29 +73,38 @@ app.controller("ViewCtrl", [
         $scope.web = prevWeb = web;
         $scope.topic = prevTopic = topic;
         prevUrl = url;
-        return true;
+        if (isFirst) {
+          isFirst = false;
+        } else {
+          return true;
+        }
       } else {
         if (url !== prevUrl) {
           prevUrl = url;
           $scope.forceReload = (new Date()).getTime();
+        } else {
+          // anchor click
         }
       }
 
-      return false
+      return false;
     }
 
     function _route() {
+      blockLocationChange = true;
       $timeout(function() {
         foswikiService.render($scope).then(
 
           // success
           function(data) {
+            blockLocationChange = false;
             $window.scrollTo(0, 0);
             $scope.$broadcast("foswiki.pageLoaded");
           },
 
           // error
           function(data) {
+            blockLocationChange = false;
             if (data) {
               var msg = "ERROR "+data.error.code+": "+data.error.message;
               $log.error(msg);
@@ -109,10 +120,25 @@ app.controller("ViewCtrl", [
       });
     }
 
-    $scope.$on("$locationChangeSuccess", function() {
+    $scope.$on("$locationChangeStart", function(ev) {
+
+      if (blockLocationChange) {
+        $log.debug("woops cascading event ... error in angular?");
+        ev.preventDefault();
+        return;
+      } 
+
       if (_parseLocation()) {
         _route();
-      }
+        return;
+      } 
+
+      // temporarily block this event to prevent it from cascading
+      blockLocationChange = true;
+      $timeout(function() {
+        blockLocationChange = false;
+      });
+
     });
 
     $scope.$watch("forceReload", function() {

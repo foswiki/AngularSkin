@@ -7,3 +7,5 @@ pub/System/AngularSkin/pkg.js
 pub/System/AngularSkin/services.js
 pub/System/AngularSkin/settings.js
 pub/System/AngularSkin/controller.js
+*.jslint
+attic
