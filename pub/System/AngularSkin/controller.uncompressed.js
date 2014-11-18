@@ -35,8 +35,8 @@ app.controller("ViewCtrl", [
 
       var match,
           path = $location.path(),
-          url = $location.absUrl().replace(/#.*/, ""),
-          search = $location.search(),
+          url = ($location.absUrl()||'').replace(/#.*/, ""),
+          search = $location.search()||{},
           angularMode = search.angular,
           web, topic;
 
@@ -55,11 +55,18 @@ app.controller("ViewCtrl", [
       web = web.replace(/^\/|\/$/g, "");
       topic = topic.replace(/^\/|\/$/g, "");
 
+
       // notify foswiki
       foswiki.preferences.WEB = web;
       foswiki.preferences.TOPIC = topic;
 
       //$log.debug("parse path=",path,"script=",$scope.script,"web=",web,"topic=",topic);
+
+      // make sure the url is well-formed by redirecting to the current location
+      // this could be the case using short urls and/or on the root location displaying the frontpage without a foswiki url prefix
+      if (!url) {
+        $location.url("/"+web+"/"+topic);
+      }
 
       if (typeof(angularMode) !== 'undefined' && angularMode === "0") {
         // reload page 
