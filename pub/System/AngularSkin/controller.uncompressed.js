@@ -37,7 +37,7 @@ app.controller("ViewCtrl", [
           path = $location.path(),
           url = ($location.absUrl()||'').replace(/#.*/, ""),
           search = $location.search()||{},
-          angularMode = search.angular,
+          angularMode = search.angular_mode,
           web, topic;
 
       match = pathRegex.exec(path);
@@ -70,7 +70,7 @@ app.controller("ViewCtrl", [
 
       if (typeof(angularMode) !== 'undefined' && angularMode === "0") {
         // reload page 
-        url = foswiki.getScriptUrl("view", web, topic, { angular: 0});
+        url = foswiki.getScriptUrl("view", web, topic, { angular_mode: 0});
         $log.debug("redirecting to ",url);
         window.location.href = url;
         return false;
