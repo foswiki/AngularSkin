@@ -44,17 +44,24 @@ app.controller("ViewCtrl", [
 
       if (match) {
         $scope.script = match[1] || 'view';
-        web = match[2] || foswikiAppSettings.defaultWebName;
-        topic = match[3] || foswikiAppSettings.homeTopicName;
+        web = match[2];
+        topic = match[3];
       } else {
         $scope.script = 'view';
-        web = foswikiAppSettings.defaultWebName;
-        topic = foswikiAppSettings.homeTopicName;
+      }
+
+      if (isFirst) {
+        // if undefined get it from foswiki.preferences
+        web = web || foswiki.preferences.WEB;
+        topic = topic || foswiki.preferences.TOPIC;
+      } else {
+        // if undefined use default web.topic
+        web = web || foswikiAppSettings.defaultWebName;
+        topic = topic || foswikiAppSettings.homeTopicName;
       }
 
       web = web.replace(/^\/|\/$/g, "");
       topic = topic.replace(/^\/|\/$/g, "");
-
 
       // notify foswiki
       foswiki.preferences.WEB = web;

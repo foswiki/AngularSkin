@@ -41,3 +41,5 @@ jQuery.extend(foswiki.preferences, {
   id="ANGULARPLUGIN::CSS"
   text="<link rel='stylesheet' type='text/css' href='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/pkg.css' media='all' >"
 }%%TMPL:END%
+
+%TMPL:DEF{"ng::loadtime"}%<div class="ngLoadTime" ng-if="loadTime" ng-bind-template="{{loadTime}} ms"></div>%TMPL:END%

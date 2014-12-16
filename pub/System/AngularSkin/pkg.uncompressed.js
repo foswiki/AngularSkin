@@ -45,7 +45,8 @@ app.factory("foswikiService", [
     var cache = {}, 
         templateRequests = {},
         canceler, 
-        prevWeb;
+        prevWeb,
+        loadStart;
 
     // request a specific template and poll them to be loaded in a batch
     function _requestTemplate(name, reload) {
@@ -139,6 +140,7 @@ app.factory("foswikiService", [
       canceler = $q.defer();
 
       // do the request
+      loadStart = (new Date()).getTime();
       $http({
         method: 'post',
         url: '/bin/jsonrpc/AngularPlugin/tmpl',
@@ -174,6 +176,9 @@ app.factory("foswikiService", [
         $rootScope.preferences = data.result.preferences;
         //$log.debug("preferences=",$rootScope.preferences);
 
+        $rootScope.loadTime = ((new Date()).getTime() - loadStart);
+        $log.log(params.topic+" took "+$rootScope.loadTime+"ms to load");
+        
         // send to promise
         deferred.resolve(data);
       })
@@ -182,6 +187,8 @@ app.factory("foswikiService", [
 
         // finish request
         canceler = undefined;
+
+        $log.log("loading time: "+(new Date()).getTime() - loadStart);
 
         // send to promise
         deferred.reject(data);
@@ -245,17 +252,24 @@ app.controller("ViewCtrl", [
 
       if (match) {
         $scope.script = match[1] || 'view';
-        web = match[2] || foswikiAppSettings.defaultWebName;
-        topic = match[3] || foswikiAppSettings.homeTopicName;
+        web = match[2];
+        topic = match[3];
       } else {
         $scope.script = 'view';
-        web = foswikiAppSettings.defaultWebName;
-        topic = foswikiAppSettings.homeTopicName;
+      }
+
+      if (isFirst) {
+        // if undefined get it from foswiki.preferences
+        web = web || foswiki.preferences.WEB;
+        topic = topic || foswiki.preferences.TOPIC;
+      } else {
+        // if undefined use default web.topic
+        web = web || foswikiAppSettings.defaultWebName;
+        topic = topic || foswikiAppSettings.homeTopicName;
       }
 
       web = web.replace(/^\/|\/$/g, "");
       topic = topic.replace(/^\/|\/$/g, "");
-
 
       // notify foswiki
       foswiki.preferences.WEB = web;

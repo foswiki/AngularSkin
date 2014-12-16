@@ -3156,6 +3156,12 @@ Copyright (c) 2014 Daniel Eden
   -webkit-animation-name: slideOutUp;
           animation-name: slideOutUp;
 }
+.ngLoadTime {
+  position:fixed;
+  bottom:0.5em;
+  right:0.5em;
+  color:#a1a1a1;
+}
 .natBusy {
   display:none;
 }

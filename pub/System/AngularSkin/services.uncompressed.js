@@ -24,7 +24,8 @@ app.factory("foswikiService", [
     var cache = {}, 
         templateRequests = {},
         canceler, 
-        prevWeb;
+        prevWeb,
+        loadStart;
 
     // request a specific template and poll them to be loaded in a batch
     function _requestTemplate(name, reload) {
@@ -118,6 +119,7 @@ app.factory("foswikiService", [
       canceler = $q.defer();
 
       // do the request
+      loadStart = (new Date()).getTime();
       $http({
         method: 'post',
         url: '/bin/jsonrpc/AngularPlugin/tmpl',
@@ -153,6 +155,9 @@ app.factory("foswikiService", [
         $rootScope.preferences = data.result.preferences;
         //$log.debug("preferences=",$rootScope.preferences);
 
+        $rootScope.loadTime = ((new Date()).getTime() - loadStart);
+        $log.log(params.topic+" took "+$rootScope.loadTime+"ms to load");
+        
         // send to promise
         deferred.resolve(data);
       })
@@ -161,6 +166,8 @@ app.factory("foswikiService", [
 
         // finish request
         canceler = undefined;
+
+        $log.log("loading time: "+(new Date()).getTime() - loadStart);
 
         // send to promise
         deferred.reject(data);
