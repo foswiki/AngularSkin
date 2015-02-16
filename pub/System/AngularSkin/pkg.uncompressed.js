@@ -283,6 +283,15 @@ app.controller("ViewCtrl", [
         $location.url("/"+web+"/"+topic);
       }
 
+      // switch off angular mode
+      if (search.logout) {
+        url = foswiki.getScriptUrl("view", web, topic, { logout: 1});
+        $log.debug("logging out redirecting to ",url);
+        window.location.href = url;
+        return false;
+      }
+
+      // log out
       if (typeof(angularMode) !== 'undefined' && angularMode === "0") {
         // reload page 
         url = foswiki.getScriptUrl("view", web, topic, { angular_mode: 0});
@@ -332,7 +341,7 @@ app.controller("ViewCtrl", [
               $log.error(msg);
 
               if (data.error.code === 401 && $scope.script !== 'login') {
-                $location.path("/login/"+$scope.web+"/"+$scope.topic).replace();
+                window.location.href = foswiki.getScriptUrl("login", $scope.web, $scope.topic);
               }
             } else {
               $log.debug("aborded previous request");
