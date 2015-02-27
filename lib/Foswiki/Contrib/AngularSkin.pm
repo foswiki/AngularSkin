@@ -1,6 +1,6 @@
 # Extension for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# AngularSkin is Copyright (C) 2014 Michael Daum http://michaeldaumconsulting.com
+# AngularSkin is Copyright (C) 2014-2015 Michael Daum http://michaeldaumconsulting.com
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -20,9 +20,9 @@ use warnings;
 
 use Foswiki::Func ();
 
-our $VERSION = '0.01';
-our $RELEASE = '0.01';
-our $SHORTDESCRIPTION = 'dummy description';
+our $VERSION = '1.00_0001';
+our $RELEASE = '27 Feb 2015';
+our $SHORTDESCRIPTION = 'Angular Skin for Foswiki';
 our $NO_PREFS_IN_TOPIC = 1;
 
 1;

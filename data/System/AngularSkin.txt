@@ -17,11 +17,12 @@
 -->
 
 |  Author(s): | Michael Daum|
-|  Copyright: | &copy; 2014 Michael Daum http://michaeldaumconsulting.com |
+|  Copyright: | &copy; 2014-2015 Michael Daum http://michaeldaumconsulting.com |
 |  License: | [[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]] |
 |  Release: | %$RELEASE% |
 |  Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  27 Feb 2015: | first alpha release |
 |  Dependencies: | %$DEPENDENCIES% |
 |  Home page: | Foswiki:Extensions/%TOPIC% |
 |  Support: | Foswiki:Support/%TOPIC% |
