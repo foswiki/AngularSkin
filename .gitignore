@@ -9,3 +9,10 @@ pub/System/AngularSkin/settings.js
 pub/System/AngularSkin/controller.js
 *.jslint
 attic
+AngularSkin.md5
+AngularSkin.sha1
+AngularSkin.tgz
+AngularSkin.txt
+AngularSkin.zip
+AngularSkin_installer
+AngularSkin_installer.pl

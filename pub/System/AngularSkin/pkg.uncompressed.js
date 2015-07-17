@@ -329,7 +329,18 @@ app.controller("ViewCtrl", [
           // success
           function(data) {
             blockLocationChange = false;
+
+            // clear twisty store
+            if (typeof(foswiki.TwistyPlugin) !== 'undefined') {
+              angular.element(".twistyContent").hide();
+              foswiki.TwistyPlugin._storage = {};
+            }
+
+            // scroll to top
             $window.scrollTo(0, 0);
+
+            // TODO: close open modal dialogs
+
             $scope.$broadcast("foswiki.pageLoaded");
           },
 

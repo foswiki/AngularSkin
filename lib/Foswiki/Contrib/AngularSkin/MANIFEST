@@ -26,3 +26,4 @@ pub/System/AngularSkin/settings.js 0644
 pub/System/AngularSkin/settings.js.gz 0644
 pub/System/AngularSkin/settings.uncompressed.js 0644
 templates/foswiki.angular.tmpl 0644
+templates/view.angular.pattern.tmpl 0644
