@@ -92,6 +92,7 @@ app.controller("ViewCtrl", [
         return false;
       }
 
+
       if (web !== prevWeb || topic !== prevTopic) {
         $scope.web = prevWeb = web;
         $scope.topic = prevTopic = topic;
@@ -99,6 +100,7 @@ app.controller("ViewCtrl", [
         if (isFirst) {
           isFirst = false;
         } else {
+          angular.element(window).trigger("locationChanged"); 
           return true;
         }
       } else {

@@ -11,11 +11,11 @@
 %TMPL:DEF{"javascript::angular::prefs"}%%ADDTOZONE{"script" 
   requires="JQUERYPLUGIN::FOSWIKI::PREFERENCES"
   id="ANGULARSKIN::PREFERENCES"
-  text="<script type='text/javascript'>
-jQuery.extend(foswiki.preferences, {
-  'ANGULAR_EXCLUDE':'%QUERY{"{AngularPlugin}{Exclude}"}%'
-});
-</script>"
+  text="<script class='$zone $id foswikiPreferences' type='text/json'>{
+    \"Angular\": {
+      \"topicFilter\": $percntQUERY{\"{AngularPlugin}{Exclude}\" style=\"json\"}$percnt
+    }
+}</script>"
 }%%JQREQUIRE{"ngCore, loadingBar"}%%TMPL:END%
 
 %TMPL:DEF{"javascript::angular::prod"}%%ADDTOZONE{
@@ -29,11 +29,11 @@ jQuery.extend(foswiki.preferences, {
     "script"
     id="ANGULARSKIN"
     requires="ANGULARPLUGIN::NGCORE, ANGULARPLUGIN::NGROUTE"
-    text="<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/app.uncompressed.js'></script>
-<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/settings.uncompressed.js'></script>
-<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/controller.uncompressed.js'></script>
-<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/directives.uncompressed.js'></script>
-<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/services.uncompressed.js'></script>"
+    text="<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/app.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/settings.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/controller.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/directives.js'></script>
+<script src='%PUBURLPATH%/%SYSTEMWEB%/AngularSkin/services.js'></script>"
 }%%TMPL:END%
 
 %TMPL:DEF{"css::angular"}%%ADDTOZONE{
